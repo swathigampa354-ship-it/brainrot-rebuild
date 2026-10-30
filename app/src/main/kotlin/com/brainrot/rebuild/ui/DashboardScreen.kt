@@ -26,6 +26,7 @@ import com.brainrot.rebuild.app.Thresholds
 import com.brainrot.rebuild.room.DailyCounterEntity
 import java.time.LocalDate
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 @Composable
@@ -36,10 +37,13 @@ fun DashboardScreen(
 ) {
     var today by remember { mutableStateOf<DailyCounterEntity?>(null) }
     var recent by remember { mutableStateOf<List<DailyCounterEntity>>(emptyList()) }
-    var freshOpen by remember { mutableStateOf(!thresholds.freshStartClosed) }
+    var freshOpen by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         app.db.countersDao().observeLatest().collect { today = it }
+    }
+    LaunchedEffect(Unit) {
+        freshOpen = !(app.thresholds.flow.first().freshStartClosed)
     }
     LaunchedEffect(Unit) {
         val from = LocalDate.now().minusDays(29).toString()

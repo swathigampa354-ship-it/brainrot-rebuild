@@ -18,6 +18,7 @@ import androidx.glance.text.TextStyle
 import com.brainrot.rebuild.R
 import com.brainrot.rebuild.app.RebuildApp
 import java.time.LocalDate
+import kotlinx.coroutines.flow.first
 
 /** App-open counter widget chip (original: AppOpenCounterWidgetReceiver). */
 class AppOpenCounterWidgetReceiver : GlanceAppWidgetReceiver() {

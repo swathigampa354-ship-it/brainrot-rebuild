@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
+import kotlinx.coroutines.launch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,7 +45,7 @@ fun SettingsScreen(
     var baseUrl by remember { mutableStateOf("") }
     var packs by remember(thresholds.watchPackages) { mutableStateOf(thresholds.watchPackages) }
     val ctx = LocalContext.current
-    val scope = kotlin.coroutines.coroutineScope.let { androidx.compose.runtime.rememberCoroutineScope() }
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
 
     LazyColumn(modifier.fillMaxSize().padding(12.dp)) {
         item {

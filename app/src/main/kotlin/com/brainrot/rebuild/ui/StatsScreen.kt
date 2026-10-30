@@ -33,6 +33,7 @@ fun StatsScreen(app: RebuildApp, modifier: Modifier = Modifier) {
     var today by remember { mutableStateOf<DailyCounterEntity?>(null) }
     var week by remember { mutableStateOf<List<DailyCounterEntity>>(emptyList()) }
     var split by remember { mutableStateOf<List<AppSplitEntity>>(emptyList()) }
+    var limit by remember { mutableStateOf(30) }
     LaunchedEffect(Unit) {
         val dayKey = LocalDate.now().toString()
         app.db.countersDao().observeLatest().collect { today = it }
@@ -42,7 +43,9 @@ fun StatsScreen(app: RebuildApp, modifier: Modifier = Modifier) {
         app.db.countersDao().observeRange(LocalDate.now().minusDays(6).toString())
             .collect { week = it }
     }
-    val limit = try { app.thresholds.flow.first().reelsLimit } catch (_: Exception) { 30 }
+    LaunchedEffect(Unit) {
+        limit = app.thresholds.flow.first().reelsLimit
+    }
     LazyColumn(modifier.fillMaxSize().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item {
             Text("Stats", style = MaterialTheme.typography.titleMedium)
