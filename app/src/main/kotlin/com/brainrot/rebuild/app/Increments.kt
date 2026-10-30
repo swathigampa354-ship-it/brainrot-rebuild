@@ -39,10 +39,11 @@ object Increments {
                 lock.withLock {
                     val dao = app.db.countersDao()
                     val day = LocalDate.now().toString()
-                    val row = dao.splitFor(day).firstOrNull { it.pkg == pkg }
+                    val rowKey = day + ":" + pkg
+                    val row = dao.splitFor(day).firstOrNull { it.packageName == pkg }
                     dao.upsertSplits(
                         listOf(
-                            (row ?: AppSplitEntity(dayKey = day, pkg = pkg)).let {
+                            (row ?: AppSplitEntity(dayKey = day, packageName = pkg, rowKey = rowKey)).let {
                                 if (kind == "reel") it.copy(reels = it.reels + 1)
                                 else it.copy(opens = it.opens + 1)
                             }
