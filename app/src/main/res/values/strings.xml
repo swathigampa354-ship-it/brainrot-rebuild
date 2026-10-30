@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Brainrot Rebuild</string>
+    <string name="a11y_service_label">Brainrot Rebuild — Reels watcher</string>
+    <string name="a11y_service_desc">Counts reels viewed in selected apps and triggers the block overlay when limits are reached.</string>
+    <string name="channel_progress">brainrot_progress</string>
+    <string name="channel_block">brainrot_block</string>
+</resources>
