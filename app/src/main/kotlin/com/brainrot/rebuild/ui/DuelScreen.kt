@@ -34,7 +34,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
- * Duel/battle screen (original: brainrot://duel, /invite/* + /duel/* endpoints,
+ * Duel/battle screen (original: brainrot://duel, invite and duel endpoints,
  * duel vote + leaderboard notifications). This rebuild does not ship the
  * vendor's server: join codes and votes go to YOUR server base URL
  * (Settings -> Cloud sync). Without a base URL the surface shows guidance.
