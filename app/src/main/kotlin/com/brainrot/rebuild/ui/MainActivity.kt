@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var thresholdsFlow: StateFlow<Thresholds>
     private var tab by mutableStateOf(0)
     private var current by mutableStateOf<Thresholds?>(null)
+    private var perms by mutableStateOf(PermissionState(false, true, false))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,17 +34,27 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launchWhenStarted {
             thresholdsFlow.collect { current = it }
         }
+        perms = checkPermissions(this)
         setContent {
             RebuildTheme {
-                AppScaffold(
-                    thresholds = current ?: Thresholds(),
-                    setThresholds = { f -> modify(f) },
-                    tab = tab,
-                    onTab = { tab = it },
-                    requestFallback = { FallbackUsageStatsService.ensure(this) }
-                )
+                if (!perms.a11y) {
+                    PermissionGate(state = perms, onRecheck = { perms = checkPermissions(this) })
+                } else {
+                    AppScaffold(
+                        thresholds = current ?: Thresholds(),
+                        setThresholds = { f -> modify(f) },
+                        tab = tab,
+                        onTab = { tab = it },
+                        requestFallback = { FallbackUsageStatsService.ensure(this) }
+                    )
+                }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        perms = checkPermissions(this)
     }
 
     private fun modify(f: suspend RebuildApp.() -> Unit) {
