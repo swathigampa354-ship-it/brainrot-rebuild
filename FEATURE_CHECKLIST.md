@@ -4,7 +4,7 @@ Legend: ✅ implemented in this repo and exercised by the CI build · 🟡 imple
 requires user-supplied credentials to function end-to-end (documented) · ❌
 intentionally excluded · ◻ documented limitation. Nothing is marked tested that hasn't been.
 
-## Core (all implemented in the Compose/Room rebuild)
+## Core (all implemented in the Compose/Room rebuild — CI green on `78c17a8`)
 
 - [x] Room schema for reels counters, daily splits, unlock tracking, migration keys — ✅
 - [x] Accessibility service watches reels apps (Instagram/YouTube) and increments counters — ✅
