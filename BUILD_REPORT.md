@@ -30,6 +30,12 @@ Debug (unminified) build.
 - Run 3 (`83004ef`) — FAILED, 2 errors (duplicate `R` imports in widget). Fixed in
   `78c17a8`.
 - Run 4 (`78c17a8`) — **SUCCESS**, debug APK produced and released.
+- Parity round 1 (`b9f7546`) — **SUCCESS** — added hand-rolled native floating
+  counter bubble (WindowManager TYPE_APPLICATION_OVERLAY chip, draggable,
+  live-updating reels counter, 800 ms refresh, doses in `brainrot_progress`
+  FGS channel), granted by the Settings screen ("Show floating counter / Stop"
+  buttons + overlay permission bypass). Original ships torrydo
+  floatingbubbleview; our build binds none of it.
 
 ## Feature parity status
 
@@ -54,10 +60,10 @@ Debug (unminified) build.
 - **Advanced widgets** — only one Glance widget (reels + opens);
   the original ships multiple variants (`AppOpenCounterWidgetReceiver`,
   `ReelsCounterWidgetExpandedReceiver`, etc.).
-- **Floating bubbles** — only the overlay + widget are present; the
-  exact floating bubble service (in the decompiled codebase this is
-  a Windows-blind `AppOpenFloatingService`/`ReelsCounterFloatingService`) is a
-  research target (smali evidence only), not committed here.
+- **Floating bubbles** — ✅ one native parity bubble is shipped (live reels
+  counter chip). The original also drives a partial overlay + paywall bubble
+  (`ReelsCounterFloatingService` binds "brainrot://paywall" click actions) —
+  that pair is a follow-up target.
 - **Cloud sync / RevenueCat / Firebase / Segment / Pairip** — excluded, as with
   swipewipe; the network layer goes to a user-configured base URL only
   (see threshold settings).
