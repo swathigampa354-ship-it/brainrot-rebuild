@@ -25,7 +25,9 @@ import com.brainrot.rebuild.services.FallbackUsageStatsService
 data class PermissionState(
     val a11y: Boolean,
     val notifications: Boolean,
-    val usageAccess: Boolean
+    val usageAccess: Boolean,
+    val installFromPlay: Boolean = true,
+    val restrictedLikely: Boolean = false
 )
 
 fun checkPermissions(ctx: Context): PermissionState {
@@ -38,6 +40,11 @@ fun checkPermissions(ctx: Context): PermissionState {
     } catch (_: Exception) {
         false
     }
+    var fromPlay = true
+    try {
+        val psi = ctx.packageManager.getInstallSourceInfo(ctx.packageName)
+        fromPlay = psi.installingPackageName == "com.android.vending"
+    } catch (_: Exception) { fromPlay = true }
     val notif = if (Build.VERSION.SDK_INT >= 33) {
         androidx.core.content.ContextCompat.checkSelfPermission(
             ctx, android.Manifest.permission.POST_NOTIFICATIONS
@@ -53,7 +60,15 @@ fun checkPermissions(ctx: Context): PermissionState {
     } catch (_: Exception) {
         false
     }
-    return PermissionState(enabled, notif, usage)
+    // Android 13+ restricts accessibility for apps installed outside a store;
+    // ColorOS adds its own verification step. We surface it instead of bypassing.
+    return PermissionState(
+        a11y = enabled,
+        notifications = notif,
+        usageAccess = usage,
+        installFromPlay = fromPlay,
+        restrictedLikely = !fromPlay
+    )
 }
 
 @Composable
@@ -83,6 +98,46 @@ fun PermissionGate(
             done = state.a11y
         ) {
             ctx.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+        }
+        if (state.restrictedLikely && !state.a11y) {
+            Card(Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Text(
+                        "Can't tap the toggle? (restricted settings)",
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    Text(
+                        "This app was installed outside an app store, so Android " +
+                            Build.VERSION.SDK_INT + " keeps this toggle unavailable until you " +
+                            "explicitly allow it — the legitimate fix, no security change:",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        "Stock Android: App info (use the button below) → three-dot menu → " +
+                            "Allow restricted settings → back here → Recheck.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Text(
+                        "OPPO ColorOS: Settings → Apps → App management → Brainrot Rebuild → " +
+                            "⋮ → Allow restricted settings (or 'unofficial source' confirmation dialog) → " +
+                            "back → Recheck.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            try {
+                                ctx.startActivity(
+                                    Intent(
+                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                        Uri.parse("package:" + ctx.packageName)
+                                    ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                )
+                            } catch (_: Exception) { }
+                        }
+                    ) { Text("Open this app's App info") }
+                }
+            }
         }
         PermStep(
             label = "2. Allow notifications",
