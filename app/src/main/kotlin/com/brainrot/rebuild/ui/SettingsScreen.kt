@@ -74,8 +74,8 @@ fun SettingsScreen(
                             val r = reelsLimit.toIntOrNull() ?: thresholds.reelsLimit
                             val o = openLimit.toIntOrNull() ?: thresholds.openLimit
                             onUpdate {
-                                thresholds.setReelsLimit(r)
-                                thresholds.setOpenLimit(o)
+                                app.thresholds.setReelsLimit(r)
+                                app.thresholds.setOpenLimit(o)
                             }
                         },
                         modifier = Modifier.padding(top = 10.dp)
@@ -96,7 +96,7 @@ fun SettingsScreen(
                         Switch(
                             checked = thresholds.blockEnabled,
                             onCheckedChange = { v ->
-                                onUpdate { thresholds.setBlockEnabled(v) }
+                                onUpdate { app.thresholds.setBlockEnabled(v) }
                             }
                         )
                     }
@@ -110,7 +110,7 @@ fun SettingsScreen(
                         Switch(
                             checked = thresholds.overlayWarnings,
                             onCheckedChange = { v ->
-                                onUpdate { thresholds.setOverlayWarnings(v) }
+                                onUpdate { app.thresholds.setOverlayWarnings(v) }
                             }
                         )
                     }
@@ -131,7 +131,7 @@ fun SettingsScreen(
                         Switch(
                             checked = thresholds.usageFallback,
                             onCheckedChange = { v ->
-                                onUpdate { thresholds.setUsageFallback(v) }
+                                onUpdate { app.thresholds.setUsageFallback(v) }
                                 if (v) FallbackUsageStatsService.ensure(ctx)
                                 else FallbackUsageStatsService.stop(ctx)
                             }
@@ -150,7 +150,7 @@ fun SettingsScreen(
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                     )
                     Button(
-                        onClick = { onUpdate { thresholds.setWatchPackages(packs) } },
+                        onClick = { onUpdate { app.thresholds.setWatchPackages(packs) } },
                         modifier = Modifier.padding(top = 10.dp)
                     ) { Text("Save watch list") }
                 }
@@ -168,7 +168,7 @@ fun SettingsScreen(
                         modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                     )
                     Button(
-                        onClick = { onUpdate { thresholds.setBaseUrl(baseUrl) } },
+                        onClick = { onUpdate { app.thresholds.setBaseUrl(baseUrl) } },
                         modifier = Modifier.padding(top = 10.dp)
                     ) { Text("Save sync URL") }
                 }

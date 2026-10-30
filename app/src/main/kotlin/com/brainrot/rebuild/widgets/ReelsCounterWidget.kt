@@ -2,7 +2,6 @@ package com.brainrot.rebuild.widgets
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
@@ -34,16 +33,24 @@ class ReelsCounterWidget : GlanceAppWidget() {
         provideContent {
             GlanceTheme {
                 Box(
-                    modifier = GlanceModifier.background(Color(0xFF101820)).padding(8.dp)
+                    modifier = GlanceModifier.background(
+                        androidx.glance.appwidget.unit.ColorProvider(R.color.brand_dark)
+                    ).padding(8.dp)
                 ) {
                     Column {
                         Text(
                             "Reels ${c?.reelsCount ?: 0}",
-                            style = TextStyle(fontSize = 16.sp, color = androidx.compose.ui.graphics.Color(0xFFFFC107))
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                color = androidx.glance.appwidget.unit.ColorProvider(R.color.brand_accent)
+                            )
                         )
                         Text(
                             "Opens ${c?.appOpens ?: 0}",
-                            style = TextStyle(fontSize = 11.sp, color = androidx.compose.ui.graphics.Color.White)
+                            style = TextStyle(
+                                fontSize = 11.sp,
+                                color = androidx.glance.appwidget.unit.ColorProvider(R.color.brand_dark)
+                            )
                         )
                     }
                 }

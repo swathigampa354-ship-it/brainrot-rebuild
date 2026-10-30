@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.weight
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -54,15 +53,3 @@ fun DashboardScreen(
     }
 }
 
-@Composable
-private fun Metric(v: Int, label: String, modifier: Modifier = Modifier) {
-    Card(modifier) {
-        Column(
-            modifier.fillMaxWidth().padding(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text("$v", style = MaterialTheme.typography.headlineSmall)
-            Text(label, style = MaterialTheme.typography.labelMedium)
-        }
-    }
-}

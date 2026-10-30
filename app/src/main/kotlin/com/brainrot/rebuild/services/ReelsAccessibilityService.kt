@@ -46,7 +46,7 @@ class ReelsAccessibilityService : AccessibilityService() {
                 if (pkg == lastPkg && now - lastTs < 1500) return
                 lastPkg = pkg
                 lastTs = now
-                Increments.reel(this, pkg)
+                Increments.reel(this)
             }
         }
 

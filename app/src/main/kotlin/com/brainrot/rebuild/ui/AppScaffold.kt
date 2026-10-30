@@ -19,13 +19,12 @@ import com.brainrot.rebuild.app.RebuildApp
 @Composable
 fun AppScaffold(
     thresholds: com.brainrot.rebuild.app.Thresholds,
-    setThresholds: suspend (suspend com.brainrot.rebuild.app.RebuildApp.() -> Unit) -> Unit,
+    setThresholds: (suspend com.brainrot.rebuild.app.RebuildApp.() -> Unit) -> Unit,
     tab: Int,
     onTab: (Int) -> Unit,
     requestFallback: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val appkey = com.brainrot.rebuild.app.RebuildApp.latest
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -46,7 +45,7 @@ fun AppScaffold(
         }
     ) { inner ->
         Box(Modifier.padding(inner).fillMaxSize()) {
-            val app = appkey
+            val app = com.brainrot.rebuild.app.RebuildApp.latest ?: return@Scaffold
             when (tab) {
                 0 -> DashboardScreen(
                     app = app,

@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
             RebuildTheme {
                 AppScaffold(
                     thresholds = current ?: Thresholds(),
-                    setThresholds = { t, f -> modify(t, f) },
+                    setThresholds = { f -> modify(f) },
                     tab = tab,
                     onTab = { tab = it },
                     requestFallback = { FallbackUsageStatsService.ensure(this) }
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun modify(t: Thresholds, f: suspend (RebuildApp.() -> Unit)) {
+    private fun modify(f: suspend RebuildApp.() -> Unit) {
         lifecycleScope.launch {
             val app = application as RebuildApp
             f.invoke(app)
