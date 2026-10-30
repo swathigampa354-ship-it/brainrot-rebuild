@@ -159,6 +159,32 @@ fun SettingsScreen(
         item {
             Card(Modifier.fillMaxWidth().padding(top = 10.dp)) {
                 Column(Modifier.padding(12.dp)) {
+                    val overlayOk = android.provider.Settings.canDrawOverlays(app)
+                    if (!overlayOk) {
+                        Button(
+                            onClick = {
+                                com.brainrot.rebuild.services.FloatingBubbleService.openOverlaySettings(app)
+                            }
+                        ) { Text("Grant overlay permission") }
+                    } else {
+                        Button(
+                            onClick = {
+                                com.brainrot.rebuild.services.FloatingBubbleService.ensure(app)
+                            }
+                        ) { Text("Show floating counter") }
+                        Button(
+                            onClick = {
+                                com.brainrot.rebuild.services.FloatingBubbleService.stop(app)
+                            },
+                            modifier = Modifier.padding(top = 8.dp)
+                        ) { Text("Stop floating counter") }
+                    }
+                }
+            }
+        }
+        item {
+            Card(Modifier.fillMaxWidth().padding(top = 10.dp)) {
+                Column(Modifier.padding(12.dp)) {
                     Text("Cloud sync (your own server)")
                     OutlinedTextField(
                         value = baseUrl,

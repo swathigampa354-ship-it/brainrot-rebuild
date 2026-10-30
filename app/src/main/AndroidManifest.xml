@@ -51,6 +51,15 @@
         </service>
 
         <service
+            android:name=".services.FloatingBubbleService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="floating_counter_bubble"/>
+        </service>
+
+        <service
             android:name=".services.FallbackUsageStatsService"
             android:exported="false"
             android:foregroundServiceType="specialUse">
