@@ -55,10 +55,10 @@ class ReelsCounterWidgetExpanded : GlanceAppWidget() {
                         "${c?.reelsCount ?: 0} reels · ${c?.appOpens ?: 0} opens",
                         style = TextStyle(fontSize = 14.sp, color = androidx.glance.unit.ColorProvider(R.color.brand_accent))
                     )
-                    androidx.glance.appwidget.ProgressBar(
+                    androidx.glance.appwidget.LinearProgressIndicator(
                         progress = (
-                            (c?.reelsCount ?: 0).toFloat() / limit.toFloat().coerceAtLeast(1f) * 100f
-                            ).toInt(),
+                            (c?.reelsCount ?: 0).toFloat() / limit.toFloat().coerceAtLeast(1f)
+                            ),
                         modifier = GlanceModifier.fillMaxWidth().padding(top = 6.dp)
                     )
                     for (s in splits) {
