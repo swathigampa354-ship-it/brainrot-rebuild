@@ -59,8 +59,6 @@ fun AppScaffold(
                 2 -> SettingsScreen(
                     thresholds = thresholds,
                     app = app,
-                    tabs = tab,
-                    onTab = onTab,
                     onUpdate = { block -> setThresholds.invoke(block) }
                 )
             }

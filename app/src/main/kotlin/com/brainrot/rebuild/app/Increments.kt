@@ -3,14 +3,21 @@ package com.brainrot.rebuild.app
 import android.content.Context
 import com.brainrot.rebuild.room.DailyCounterEntity
 import java.time.LocalDate
-import kotlin.concurrent.thread
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.runBlocking
 
 /** Threaded counter bumps shared by services/workers. */
 object Increments {
 
+    private val scope = kotlinx.coroutines.CoroutineScope(
+        kotlinx.coroutines.SupervisorJob() + Dispatchers.IO
+    )
+
     private fun bump(context: Context, mutate: (DailyCounterEntity) -> DailyCounterEntity) {
         val app = context.applicationContext as RebuildApp
-        thread {
+        scope.launch {
             try {
                 val dao = app.db.countersDao()
                 val day = LocalDate.now().toString()

@@ -32,7 +32,7 @@ class FallbackUsageStatsService : Service() {
             stopFlag = false
             ticker = thread(start = true) {
                 while (!stopFlag) {
-                    try { scan(app) } catch (_: Exception) { }
+                    try { kotlinx.coroutines.runBlocking { scan(app) } } catch (_: Exception) { }
                     try { Thread.sleep(60_000) } catch (_: InterruptedException) { return@thread }
                 }
             }

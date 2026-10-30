@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.view.accessibility.AccessibilityEvent
 import com.brainrot.rebuild.app.RebuildApp
+import com.brainrot.rebuild.app.Increments
 import com.brainrot.rebuild.app.Thresholds
 import com.brainrot.rebuild.ui.BlockOverlayActivity
 import java.time.LocalDate
