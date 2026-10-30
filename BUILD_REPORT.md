@@ -20,6 +20,31 @@ Build identity: `com.brainrot.rebuild`, versionName 1.0.0, versionCode 1,
 minSdk 28 (Glance requires 8+; accessibility API needs 9+), targetSdk 36,
 Debug (unminified) build.
 
+## A11y enablement investigation (OPPO A78 / Android 15)
+
+Device evidence collected via pm (the only privileged surface reachable as an app uid):
+
+| package | installer |
+|---|---|
+| com.brainrot.android (BrainPal original) | com.android.vending (Play) |
+| com.swipewipe.rebuild | com.google.android.packageinstaller (sideloaded) |
+| net.kuafuai.andee | com.google.android.packageinstaller (sideloaded) |
+| com.brainrot.rebuild | not present in pm list (removed by user during troubleshooting) |
+
+Root cause: Android 13+ "Restricted settings" — apps installed by untrusted
+installers (Android package installer per pm list above) keep
+accessibility/notification toggles blocked until the user explicitly allows
+them from App info (⋮ → Allow restricted settings). The original (BrainPal)
+never trips it because it was installed by com.android.vending (Play).
+dumpsys/settings/appops reads are denied from Termux (no DUMP /
+INTERACT_ACROSS_USERS), so the conclusion is provable from installer metadata,
+AOSP behavior, and the manifest being AOSP-template-congruent (see
+res/xml/a11y_service_config.xml + the service entry in the manifest).
+Fix shipped in the build UI itself: Permission gate now detects the
+sideloaded install source and shows the exact unlock path (App info →
+⋮ → Allow restricted settings) for stock Android AND OPPO ColorOS, without
+bypassing or weakening anything (versionName 1.1.0).
+
 ## CI iteration log (honest)
 
 - Run 1 (`707cbba`) — FAILED, 44 Kotlin errors (missing shared UI file, `Increments`
