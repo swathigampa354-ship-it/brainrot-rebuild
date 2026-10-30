@@ -33,18 +33,6 @@
         </activity>
 
         <activity
-            android:name=".ui.PaywallActivity"
-            android:exported="true"
-            android:theme="@style/Theme.BrainrotRebuild">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="brainrot" android:host="paywall" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".ui.BlockOverlayActivity"
             android:excludeFromRecents="true"
             android:exported="false" />
