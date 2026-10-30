@@ -65,6 +65,12 @@ interface CountersDao {
 
     @Query("DELETE FROM rolling_events WHERE ts < :cut")
     suspend fun prune(cut: Long)
+
+    @Query("SELECT * FROM daily_counters WHERE dayKey >= :from ORDER BY dayKey")
+    fun observeRange(from: String): Flow<List<DailyCounterEntity>>
+
+    @Query("SELECT * FROM daily_counters WHERE dayKey >= :from ORDER BY dayKey")
+    suspend fun rangeFor(from: String): List<DailyCounterEntity>
 }
 
 @Dao

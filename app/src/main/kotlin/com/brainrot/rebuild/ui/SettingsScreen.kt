@@ -44,6 +44,7 @@ fun SettingsScreen(
     var baseUrl by remember { mutableStateOf("") }
     var packs by remember(thresholds.watchPackages) { mutableStateOf(thresholds.watchPackages) }
     val ctx = LocalContext.current
+    val scope = kotlin.coroutines.coroutineScope.let { androidx.compose.runtime.rememberCoroutineScope() }
 
     LazyColumn(modifier.fillMaxSize().padding(12.dp)) {
         item {
@@ -185,6 +186,56 @@ fun SettingsScreen(
         item {
             Card(Modifier.fillMaxWidth().padding(top = 10.dp)) {
                 Column(Modifier.padding(12.dp)) {
+                    Text("Extras (parity)", style = MaterialTheme.typography.titleSmall)
+                    Row(Modifier.padding(top = 8.dp)) {
+                        Text("Event notifications", Modifier.weight(1f))
+                        Switch(checked = thresholds.eventNotifications,
+                            onCheckedChange = { v -> onUpdate { app.thresholds.setEventNotifications(v) } })
+                    }
+                    Row {
+                        Text("Try-BR auto-return", Modifier.weight(1f))
+                        Switch(checked = thresholds.tryBrReturn,
+                            onCheckedChange = { v -> onUpdate { app.thresholds.setTryBrReturn(v) } })
+                    }
+                    Button(
+                        onClick = {
+                            try {
+                                val act = app as? android.app.Activity
+                                act?.let {
+                                    val i = android.content.Intent(
+                                        android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                                        android.net.Uri.parse("package:" + app.packageName)
+                                    )
+                                    app.startActivity(i)
+                                }
+                            } catch (_: Exception) { }
+                        },
+                        modifier = Modifier.padding(top = 8.dp)
+                    ) { Text("Request battery optimization exemption") }
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                try {
+                                    val dao = app.db.countersDao()
+                                    val rows = dao.rangeFor(java.time.LocalDate.now().minusDays(30).toString())
+                                    val dir = app.getExternalFilesDir(null) ?: app.filesDir
+                                    val f = java.io.File(dir, "brainrot_export.csv")
+                                    f.writeText(
+                                        "day,reels,opens,unlocks,blocks\n" + rows.joinToString("\n") {
+                                            it.dayKey + "," + it.reelsCount + "," + it.appOpens + "," + it.phoneUnlocks + "," + it.blockHits
+                                        }
+                                    )
+                                    toastShim(app, "Exported: " + f.absolutePath)
+                                } catch (t: Throwable) { toastShim(app, "Export failed: " + t.message) }
+                            }
+                        }
+                    ) { Text("Export data (CSV)") }
+                }
+            }
+        }
+        item {
+            Card(Modifier.fillMaxWidth().padding(top = 10.dp)) {
+                Column(Modifier.padding(12.dp)) {
                     Text("Cloud sync (your own server)")
                     OutlinedTextField(
                         value = baseUrl,
@@ -201,4 +252,8 @@ fun SettingsScreen(
             }
         }
     }
+}
+
+private fun toastShim(ctx: android.content.Context, msg: String) {
+    try { android.widget.Toast.makeText(ctx, msg, android.widget.Toast.LENGTH_LONG).show() } catch (_: Exception) { }
 }

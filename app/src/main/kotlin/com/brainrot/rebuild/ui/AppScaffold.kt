@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
@@ -31,7 +32,8 @@ fun AppScaffold(
                 listOf(
                     0 to "Home" to Icons.Default.Home,
                     1 to "Stats" to Icons.Default.BarChart,
-                    2 to "Settings" to Icons.Default.Settings
+                    2 to "Duel" to Icons.Default.Groups,
+                    3 to "Settings" to Icons.Default.Settings
                 ).forEach { (pair, icon) ->
                     val (i, label) = pair
                     NavigationBarItem(
@@ -56,7 +58,8 @@ fun AppScaffold(
                     )
                 )
                 1 -> StatsScreen(app)
-                2 -> SettingsScreen(
+                2 -> DuelScreen(app)
+                3 -> SettingsScreen(
                     thresholds = thresholds,
                     app = app,
                     onUpdate = { block -> setThresholds.invoke(block) }

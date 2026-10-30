@@ -21,7 +21,10 @@ data class Thresholds(
     val usageFallback: Boolean = true,
     val watchPackages: String =
         "com.instagram.android,com.google.android.youtube,com.reddit.frontpage,com.zhiliaoapp.musically",
-    val lastSync: Long = 0
+    val lastSync: Long = 0,
+    val eventNotifications: Boolean = true,
+    val tryBrReturn: Boolean = false,
+    val freshStartClosed: Boolean = false
 ) {
     fun watchList(): List<String> = watchPackages.split(",").map { it.trim() }.filter { it.isNotEmpty() }
 }
@@ -36,6 +39,9 @@ class ThresholdStore(private val context: Context) {
         val PACKS = stringPreferencesKey("watch_packages")
         val BASEURL = stringPreferencesKey("api_base_url")
         val LASTSYNC = longPreferencesKey("last_sync")
+        val EVNOTIF = booleanPreferencesKey("event_notifications")
+        val TRYBR = booleanPreferencesKey("try_br_return")
+        val FRESH = booleanPreferencesKey("fresh_start_closed")
     }
 
     val flow: Flow<Thresholds> = context.thrDataStore.data.map { p ->
@@ -47,7 +53,10 @@ class ThresholdStore(private val context: Context) {
             usageFallback = p[K.FALLBACK] ?: true,
             watchPackages = p[K.PACKS]
                 ?: "com.instagram.android,com.google.android.youtube,com.reddit.frontpage,com.zhiliaoapp.musically",
-            lastSync = p[K.LASTSYNC] ?: 0L
+            lastSync = p[K.LASTSYNC] ?: 0L,
+            eventNotifications = p[K.EVNOTIF] ?: true,
+            tryBrReturn = p[K.TRYBR] ?: false,
+            freshStartClosed = p[K.FRESH] ?: false
         )
     }
 
@@ -61,6 +70,9 @@ class ThresholdStore(private val context: Context) {
     suspend fun setOverlayWarnings(v: Boolean) = context.thrDataStore.edit { it[K.OVERLAY] = v }
     suspend fun setUsageFallback(v: Boolean) = context.thrDataStore.edit { it[K.FALLBACK] = v }
     suspend fun setWatchPackages(v: String) = context.thrDataStore.edit { it[K.PACKS] = v }
+    suspend fun setEventNotifications(v: Boolean) = context.thrDataStore.edit { it[K.EVNOTIF] = v }
+    suspend fun setTryBrReturn(v: Boolean) = context.thrDataStore.edit { it[K.TRYBR] = v }
+    suspend fun setFreshStartClosed(v: Boolean) = context.thrDataStore.edit { it[K.FRESH] = v }
 
     fun todayKey(): String = LocalDate.now().toString()
 }

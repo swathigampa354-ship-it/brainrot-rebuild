@@ -124,10 +124,26 @@ class ReelsAccessibilityService : AccessibilityService() {
                 lastReelTs = now
                 if (isReelSurface(pkg, e)) {
                     Increments.reel(this, pkg)
+                    handleTryBrReturn(t)
                 }
             }
         }
         maybeBlock(t, pkg)
+    }
+
+    /** Try-BR parity: on a counted reel, bring the counter app to the
+     *  foreground so the user sees how much they stacked  (original:
+     *  "Try-BR auto-return: brought BrainRot to foreground"). */
+    private fun handleTryBrReturn(t: Thresholds) {
+        if (!t.tryBrReturn) return
+        try {
+            val launch = packageManager.getLaunchIntentForPackage(packageName)
+            if (launch != null) {
+                launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                launch.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                applicationContext.startActivity(launch)
+            }
+        } catch (_: Exception) { }
     }
 
     private fun maybeBlock(t: Thresholds, pkg: String) {

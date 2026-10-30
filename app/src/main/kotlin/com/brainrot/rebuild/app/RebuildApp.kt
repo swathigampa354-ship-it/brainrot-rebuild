@@ -7,6 +7,7 @@ import androidx.room.Room
 import androidx.work.Configuration
 import com.brainrot.rebuild.net.SyncManager
 import com.brainrot.rebuild.room.ReelsDb
+import com.brainrot.rebuild.app.Increments
 import com.brainrot.rebuild.workers.WorkSchedule
 
 class RebuildApp : Application(), Configuration.Provider {
@@ -32,6 +33,7 @@ class RebuildApp : Application(), Configuration.Provider {
         sync = SyncManager(this, db, thresholds)
         latest = this
         createChannels()
+        registerUnlockCounter()
         WorkSchedule.schedule(this)
     }
 
@@ -53,4 +55,27 @@ class RebuildApp : Application(), Configuration.Provider {
 
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder().build()
+
+    /** Phone unlock counting parity (SCREEN_ON / USER_PRESENT in the original). */
+    private fun registerUnlockCounter() {
+        val recv = object : android.content.BroadcastReceiver() {
+            override fun onReceive(ctx: android.content.Context?, intent: android.content.Intent?) {
+                val act = intent?.action ?: return
+                if (act == android.content.Intent.ACTION_USER_PRESENT) {
+                    Increments.unlock(applicationContext)
+                }
+            }
+        }
+        val filter = android.content.IntentFilter().apply {
+            addAction(android.content.Intent.ACTION_USER_PRESENT)
+            addAction(android.content.Intent.ACTION_SCREEN_OFF)
+        }
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= 33) {
+                registerReceiver(recv, filter, android.content.Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                registerReceiver(recv, filter)
+            }
+        } catch (_: Exception) { }
+    }
 }
