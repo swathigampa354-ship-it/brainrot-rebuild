@@ -33,6 +33,18 @@
         </activity>
 
         <activity
+            android:name=".ui.PaywallActivity"
+            android:exported="true"
+            android:theme="@style/Theme.BrainrotRebuild">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="brainrot" android:host="paywall" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ui.BlockOverlayActivity"
             android:excludeFromRecents="true"
             android:exported="false" />
@@ -67,6 +79,17 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="watch_usage_stats_for_reels_counter" />
         </service>
+
+        <receiver
+            android:name=".widgets.ReelsCounterWidgetExpandedReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/reels_counter_widget_expanded_info" />
+        </receiver>
 
         <receiver
             android:name=".widgets.ReelsCounterWidgetReceiver"

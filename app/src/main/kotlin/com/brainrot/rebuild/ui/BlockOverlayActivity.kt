@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,6 +43,10 @@ class BlockOverlayActivity : AppCompatActivity() {
                 Button(onClick = { finish() }, modifier = Modifier.padding(top = 12.dp)) {
                     Text("Got it")
                 }
+                OutlinedButton(
+                    onClick = { PaywallActivity.open(this@BlockOverlayActivity) },
+                    modifier = Modifier.padding(top = 8.dp)
+                ) { Text("See unlimited plans") }
             }
         }
     }
