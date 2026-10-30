@@ -15,10 +15,9 @@ import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.padding
-import com.brainrot.rebuild.R
 import androidx.glance.text.Text
-import com.brainrot.rebuild.R
 import androidx.glance.text.TextStyle
+import com.brainrot.rebuild.R
 import com.brainrot.rebuild.app.RebuildApp
 import java.time.LocalDate
 import kotlinx.coroutines.flow.first
